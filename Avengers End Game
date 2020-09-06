@@ -1,0 +1,50 @@
+
+#include<bits/stdc++.h>
+using namespace std;
+#define lli long long int
+#define ulli unsigned long long int
+#define MOD 1000000007
+int filter(int i,int* arr){//generate subset....o(bits)
+    int j=0;    int ans=1;
+    while(i>0){
+        int lastBit= (i&1);
+        if(lastBit){
+            ans= ans* arr[j];
+        }
+        j++;    i=i>>1;
+    }
+    return ans;
+}
+
+int solve(int num){
+            //inclusion-exclusion principle->    aUb = a + b - a^b;  ^ is intersection and U is union
+            //find all numbers <= num which are divisible by any of the primes less than 20
+            int arr[8]={2,3,5,7,11,13,17,19};//all prime numbers less than 20
+            int n=8;    int denom;  int finalAns=0;
+
+            //start from i=1 and not i=0 as we dont need empty subset
+            for(int i=1;i<=pow(2,n)-1;i++){//generate all subsets....o(2^n)
+                int setBits= __builtin_popcount(i);
+                denom= filter(i,arr);//generate a subset corresponding to i (in binary)
+                if(setBits&1){//odd i.e add in inclusion-exclusion formula
+                    finalAns += num/denom;
+                }
+                else{//even i.e. subtract in inclusion-exclusion formula
+                    finalAns -= num/denom;
+                }
+            }
+           return finalAns;
+}
+int main()
+{
+            int test; cin>>test;
+            while(test--){
+                int n;//n can be very large so advised to take ulli everywhere
+                cin>>n;
+                cout<<solve(n)<<endl;
+            }
+
+}
+
+
+
